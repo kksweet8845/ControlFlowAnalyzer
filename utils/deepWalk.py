@@ -53,7 +53,6 @@ class DeepWalk(object):
         )
 
         dataset = list(itertools.chain(*results))
-
         return dataset
 
     
@@ -73,7 +72,7 @@ class DeepWalk(object):
 
         while len(walk) < walk_length:
             current_node = walk[-1]
-            current_neighbors = list(G.neighbots(current_node))
+            current_neighbors = list(G.neighbors(current_node))
             if len(current_neighbors) > 0:
                 walk.append(random.choice(current_neighbors))
             else:
@@ -89,6 +88,29 @@ class DeepWalk(object):
         else:
             print("Please train the model first")
             return None
+
+
+if __name__ == "__main__":
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     

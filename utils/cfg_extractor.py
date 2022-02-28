@@ -45,19 +45,24 @@ class PHPOpcodeXMLDOM:
 
         xml['functions'] = self._ana_fns(fns)
 
+        xml['classes'] = self._ana_classes(classes)
+
         return xml
 
 
     def _ana_main(self, mainxml):
 
         # Only analyze basic block
-
         basicblocks = mainxml.iter('BasicBlock')
         cfg_map = []
 
         for bb in basicblocks:
             edges, fcall = self._ana_bb(bb)
-            cfg_map.append((edges, fcall))
+            # cfg_map.append((edges, fcall))
+            cfg_map.append({
+                'edges' : edges,
+                'fcall' : fcall
+            })
 
         return cfg_map
 
@@ -78,12 +83,41 @@ class PHPOpcodeXMLDOM:
         cfg_map = []
         for bb in bbs:
             edges, fcall = self._ana_bb(bb)
-            cfg_map.append((edges, fcall))
+            # cfg_map.append((edges, fcall))
+            cfg_map.append({
+                'edges' : edges,
+                'fcall' : fcall
+            })
 
         return {
             'name' : fn_name,
             'edge_list' : cfg_map
         }
+
+    def _ana_classes(self, classes):
+
+        classes_cfg_map = []
+        for _c in classes:
+            class_cfg_map = self._ana_class(_c)
+            classes_cfg_map.append(class_cfg_map)
+        
+        return classes_cfg_map
+
+    def _ana_class(self, _classxml):
+
+        class_name = _classxml.get("name")
+
+        
+        class_cfg_map = []
+        for fnxml in _classxml.iter("Function"):
+            fn_cfg_map = self._ana_fn(fnxml)
+            class_cfg_map.append(fn_cfg_map)
+
+        return {
+            'name' : class_name,
+            'functions' : class_cfg_map 
+        }
+        
 
     def _ana_opcode(self, opcodes):
 
@@ -92,7 +126,7 @@ class PHPOpcodeXMLDOM:
             if opcode.get("codeStr") == "INIT_FCALL_BY_NAME":
                 op2 = opcode.get("op2_const")
                 op2 = re.sub("&quot;", "", op2)
-                
+                op2 = re.sub("\"", "", op2)
                 fcall.append(op2)
 
         return fcall
