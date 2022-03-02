@@ -15,7 +15,6 @@ def gen_edge_from_dir(dir_path, outdir):
     php_ext = PHPExtractor()
 
     for _file in files:
-        
         filepath = os.path.join(dir_path, _file)
 
         if os.path.isfile(filepath):
@@ -50,7 +49,6 @@ def main():
                         type=str,
                         required=True,
                         help="The output directory")
-    
     args = parser.parse_args()
 
     if args.file:

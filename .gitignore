@@ -2,3 +2,6 @@ test-data
 data
 
 __pycache__
+.ipynb_checkpoints
+pure-cfg
+pure-data
